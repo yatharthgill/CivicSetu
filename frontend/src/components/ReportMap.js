@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import Image from 'next/image';
 
 // Fix for default marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -19,7 +20,7 @@ export default function ReportMap({ reports }) {
         : defaultCenter;
 
     return (
-        <div className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-300 shadow-md z-0">
+        <div className="h-125 w-full rounded-lg overflow-hidden border border-gray-300 shadow-md z-0">
             <MapContainer center={center} zoom={5} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -32,7 +33,7 @@ export default function ReportMap({ reports }) {
                             position={[report.location.coordinates[1], report.location.coordinates[0]]}
                         >
                             <Popup>
-                                <div className="min-w-[200px]">
+                                <div className="min-w-50">
                                     <h3 className="font-bold text-lg">{report.title}</h3>
                                     <p className="text-sm text-gray-600 mb-1">{report.location.name}</p>
                                     <div className="flex items-center gap-2 mb-2">
@@ -47,9 +48,9 @@ export default function ReportMap({ reports }) {
                                         </span>
                                     </div>
                                     {report.media && report.media.length > 0 && report.media[0].type === 'image' && (
-                                        <img src={report.media[0].url} alt="Report" className="mt-2 w-full h-32 object-cover rounded mb-2" />
+                                        <Image src={report.media[0].url} alt="Report" className="mt-2 w-full h-32 object-cover rounded mb-2" width={300} height={128} />
                                     )}
-                                    <a href={`/reports/${report._id}`} className="block text-center w-full bg-blue-600 !text-white text-sm py-1.5 rounded hover:bg-blue-700 transition">
+                                    <a href={`/reports/${report._id}`} className="block text-center w-full bg-blue-600 text-white! text-sm py-1.5 rounded hover:bg-blue-700 transition">
                                         View Details
                                     </a>
                                 </div>

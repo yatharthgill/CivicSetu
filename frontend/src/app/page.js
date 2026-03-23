@@ -40,7 +40,7 @@ export default function Home() {
             <CheckCircle size={24} />
           </div>
           <h3 className="text-xl font-semibold mb-2">Get Resolved</h3>
-          <p className="text-gray-600">Track the status of your report and get notified when it's fixed.</p>
+          <p className="text-gray-600">Track the status of your report and get notified when it&apos;s fixed.</p>
         </div>
       </div>
     </div>

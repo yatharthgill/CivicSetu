@@ -4,17 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import reportService from '../../services/reportService';
 import ReportCard from '../../components/ReportCard';
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Loader2, List, Map as MapIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const ReportMap = dynamic(() => import('../../components/ReportMap'), {
     ssr: false,
-    loading: () => <div className="h-[500px] bg-gray-100 flex items-center justify-center">Loading Map...</div>
+    loading: () => <div className="h-125 bg-gray-100 flex items-center justify-center">Loading Map...</div>
 });
 
-export default function ReportsPage() {
+function ReportsPageContent() {
     const searchParams = useSearchParams();
     const initialFilter = searchParams.get('filter');
     const initialView = searchParams.get('view');
@@ -263,5 +263,13 @@ export default function ReportsPage() {
                 </>
             )}
         </div>
+    );
+}
+
+export default function ReportsPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center mt-20"><Loader2 className="animate-spin h-10 w-10 text-blue-600" /></div>}>
+            <ReportsPageContent />
+        </Suspense>
     );
 }

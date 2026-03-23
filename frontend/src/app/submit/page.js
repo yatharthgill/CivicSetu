@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import reportService from '../../services/reportService';
 import { useRouter } from 'next/navigation';
 import { Camera, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 // Dynamically import LocationPicker to avoid SSR issues with Leaflet
 const LocationPicker = dynamic(() => import('../../components/LocationPicker'), {
@@ -222,7 +223,7 @@ export default function SubmitReport() {
                         <div className="flex gap-2 mt-4 overflow-x-auto">
                             {previews.map((src, idx) => (
                                 <div key={idx} className="relative flex-shrink-0">
-                                    <img src={src} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
+                                    <Image src={src} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
                                     <button
                                         type="button"
                                         onClick={() => removeFile(idx)}

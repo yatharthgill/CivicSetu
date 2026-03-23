@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 const ReportMap = dynamic(() => import('../../../../components/ReportMap'), {
     ssr: false,
@@ -51,15 +52,8 @@ export default function AdminReportDetail() {
         enabled: !!id && !!user && user.role === 'admin',
     });
 
-    // Initialize state when report loads
     const report = reportData?.data?.report;
-
-    useEffect(() => {
-        if (report) {
-            setStatus(report.status);
-            // setDepartment(report.department || '');
-        }
-    }, [report]);
+    const selectedStatus = status || report?.status || 'reported';
 
     const updateMutation = useMutation({
         mutationFn: async (data) => {
@@ -87,7 +81,7 @@ export default function AdminReportDetail() {
             alert('Please provide a reason for rejection in the notes field.');
             return;
         }
-        updateMutation.mutate({ status, notes });
+        updateMutation.mutate({ status: selectedStatus, notes });
     };
 
     if (authLoading || isLoading) return <div className="flex justify-center mt-20"><Loader2 className="animate-spin h-10 w-10 text-blue-600" /></div>;
@@ -140,7 +134,7 @@ export default function AdminReportDetail() {
                                 <div className="grid grid-cols-2 gap-2">
                                     {report.media.map((item, idx) => (
                                         item.type === 'image' ? (
-                                            <img key={idx} src={item.url} alt="Evidence" className="rounded-lg w-full h-48 object-cover" />
+                                            <Image key={idx} src={item.url} alt="Evidence" className="rounded-lg w-full h-48 object-cover" />
                                         ) : (
                                             <video key={idx} src={item.url} controls className="rounded-lg w-full h-48 object-cover" />
                                         )
@@ -189,7 +183,7 @@ export default function AdminReportDetail() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Update Status</label>
                                 <select
-                                    value={status}
+                                    value={selectedStatus}
                                     onChange={(e) => setStatus(e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
                                 >
@@ -206,15 +200,15 @@ export default function AdminReportDetail() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
-                                    {status === 'rejected' ? 'Rejection Reason' : 'Add Notes'}
+                                    {selectedStatus === 'rejected' ? 'Rejection Reason' : 'Add Notes'}
                                 </label>
                                 <textarea
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
                                     rows="3"
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
-                                    placeholder={status === 'rejected' ? "Reason for rejection..." : "Internal notes or public update..."}
-                                    required={status === 'rejected'}
+                                    placeholder={selectedStatus === 'rejected' ? "Reason for rejection..." : "Internal notes or public update..."}
+                                    required={selectedStatus === 'rejected'}
                                 ></textarea>
                             </div>
 

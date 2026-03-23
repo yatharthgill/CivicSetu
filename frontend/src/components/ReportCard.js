@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import reportService from '../services/reportService';
 import { useAuth } from '../context/AuthContext';
+import Image from 'next/image';
 
 export default function ReportCard({ report }) {
     const { user } = useAuth();
@@ -61,7 +62,7 @@ export default function ReportCard({ report }) {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col h-full">
             {report.media && report.media.length > 0 && report.media[0].type === 'image' ? (
-                <img src={report.media[0].url} alt={report.title} className="w-full h-40 object-cover" />
+                <Image src={report.media[0].url} alt={report.title} className="w-full h-40 object-cover" />
             ) : (
                 <div className="w-full h-40 bg-gray-100 flex items-center justify-center text-gray-400">
                     No Image
