@@ -209,7 +209,13 @@ export default function UserDetailsPage() {
                                                     <div className="flex items-start">
                                                         <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-md overflow-hidden">
                                                             {report.media && report.media.length > 0 && report.media[0].type === 'image' ? (
-                                                                <Image src={report.media[0].thumbnail || report.media[0].url} alt="" className="h-full w-full object-cover" />
+                                                                <Image
+                                                                    src={report.media[0].thumbnail || report.media[0].url}
+                                                                    alt=""
+                                                                    width={40}
+                                                                    height={40}
+                                                                    className="h-full w-full object-cover"
+                                                                />
                                                             ) : (
                                                                 <div className="h-full w-full flex items-center justify-center text-gray-400">
                                                                     <AlertTriangle size={20} />

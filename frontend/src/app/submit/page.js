@@ -223,7 +223,14 @@ export default function SubmitReport() {
                         <div className="flex gap-2 mt-4 overflow-x-auto">
                             {previews.map((src, idx) => (
                                 <div key={idx} className="relative flex-shrink-0">
-                                    <Image src={src} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
+                                    <Image
+                                        src={src}
+                                        alt="Preview"
+                                        width={80}
+                                        height={80}
+                                        unoptimized
+                                        className="h-20 w-20 object-cover rounded-md"
+                                    />
                                     <button
                                         type="button"
                                         onClick={() => removeFile(idx)}

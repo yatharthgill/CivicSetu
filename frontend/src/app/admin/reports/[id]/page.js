@@ -134,7 +134,14 @@ export default function AdminReportDetail() {
                                 <div className="grid grid-cols-2 gap-2">
                                     {report.media.map((item, idx) => (
                                         item.type === 'image' ? (
-                                            <Image key={idx} src={item.url} alt="Evidence" className="rounded-lg w-full h-48 object-cover" />
+                                            <Image
+                                                key={idx}
+                                                src={item.url}
+                                                alt="Evidence"
+                                                width={640}
+                                                height={192}
+                                                className="rounded-lg w-full h-48 object-cover"
+                                            />
                                         ) : (
                                             <video key={idx} src={item.url} controls className="rounded-lg w-full h-48 object-cover" />
                                         )

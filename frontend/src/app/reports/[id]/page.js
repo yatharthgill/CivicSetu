@@ -180,7 +180,13 @@ export default function ReportDetail() {
                                 {report.media.map((item, idx) => (
                                     <div key={idx} className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                                         {item.type === 'image' ? (
-                                            <Image src={item.url} alt={`Evidence ${idx + 1}`} className="w-full h-full object-cover" />
+                                            <Image
+                                                src={item.url}
+                                                alt={`Evidence ${idx + 1}`}
+                                                width={1280}
+                                                height={720}
+                                                className="w-full h-full object-cover"
+                                            />
                                         ) : (
                                             <video src={item.url} controls className="w-full h-full object-cover" />
                                         )}
