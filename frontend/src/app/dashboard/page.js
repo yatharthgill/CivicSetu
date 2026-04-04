@@ -1,26 +1,29 @@
-'use client';
-
-import { useAuth } from '../../context/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { PlusCircle, List, Map as MapIcon } from 'lucide-react';
+import { serverFetch } from '../../utils/serverFetch';
 
-export default function Dashboard() {
-    const { user, loading } = useAuth();
-    const router = useRouter();
+export const metadata = {
+    title: 'Dashboard | CivicSetu',
+};
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push('/login');
+export default async function Dashboard() {
+    let user = null;
+    
+    // Server-side authentication check
+    try {
+        const data = await serverFetch('/auth/me');
+        if (data && data.data && data.data.user) {
+            user = data.data.user;
         }
-    }, [user, loading, router]);
-
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    } catch (error) {
+        // Unauthorized or failed
     }
 
-    if (!user) return null;
+    // Redirect to login if not authenticated (happens on the server before rendering!)
+    if (!user) {
+        redirect('/login');
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -60,12 +63,6 @@ export default function Dashboard() {
                     </div>
                 </Link>
 
-                {/* Nearby Reports Card */}
-                {/* Note: We don't have a dedicated nearby page yet, but reports page has map view. 
-                    Or we could link to a map view with nearby filter if implemented. 
-                    For now, linking to reports page map view if possible, or just reports page.
-                    Actually, let's just link to reports page for now as it has map toggle.
-                */}
                 <Link href="/reports?filter=nearby&view=map&sameCity=true" className="block group">
                     <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-gray-200">
                         <div className="p-6 flex flex-col items-center text-center">
