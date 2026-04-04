@@ -1,0 +1,18 @@
+{
+  "name": "CivicSetu",
+  "short_name": "CivicSetu",
+  "description": "Report and track civic issues in your city",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f766e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/civicsetu-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
