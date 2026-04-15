@@ -17,7 +17,9 @@ const adminService = {
     },
 
     updateReportStatus: async (id, data) => {
-        const response = await api.patch(`/admin/reports/${id}/status`, data);
+        const isFormData = data instanceof FormData;
+        const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+        const response = await api.patch(`/admin/reports/${id}/status`, data, config);
         return response.data;
     },
 

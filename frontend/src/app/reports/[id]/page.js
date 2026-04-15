@@ -196,6 +196,21 @@ export default function ReportDetail() {
                         </div>
                     </div>
 
+                    {/* Resolution Evidence */}
+                    {report.resolutionMedia && report.resolutionMedia.length > 0 && (
+                        <div className="mb-8 bg-green-50 p-6 rounded-lg border border-green-200">
+                            <h3 className="text-lg font-semibold mb-4 text-green-800">✅ Resolution Evidence</h3>
+                            <p className="text-sm text-green-700 mb-4">The following images were provided as proof of the completed work.</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {report.resolutionMedia.map((item, idx) => (
+                                    <div key={idx} className="relative aspect-video bg-white rounded-lg overflow-hidden border border-green-200">
+                                        <img src={item.url} alt={`Resolution evidence ${idx + 1}`} className="w-full h-full object-cover" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     {report.history && report.history.length > 0 && (
                         <div>
                             <h3 className="text-lg font-semibold mb-4">Updates</h3>

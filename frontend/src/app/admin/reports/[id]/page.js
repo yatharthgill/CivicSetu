@@ -5,7 +5,7 @@ import adminService from '../../../../services/adminService';
 import { useAuth } from '../../../../context/AuthContext';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, Camera, X } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
@@ -22,8 +22,8 @@ export default function AdminReportDetail() {
 
     const [status, setStatus] = useState('');
     const [notes, setNotes] = useState('');
-    // Department feature not supported by backend yet
-    // const [department, setDepartment] = useState('');
+    const [resolutionFiles, setResolutionFiles] = useState([]);
+    const [resolutionPreviews, setResolutionPreviews] = useState([]);
 
     useEffect(() => {
         if (!authLoading && (!user || user.role !== 'admin')) {
@@ -64,7 +64,16 @@ export default function AdminReportDetail() {
     const updateMutation = useMutation({
         mutationFn: async (data) => {
             if (data.status === 'rejected') {
-                await adminService.rejectReport(id, data.notes); // notes as reason
+                await adminService.rejectReport(id, data.notes);
+            } else if (data.status === 'resolved') {
+                // Use FormData for resolved status (contains images)
+                const formData = new FormData();
+                formData.append('status', data.status);
+                if (data.notes) formData.append('notes', data.notes);
+                data.files.forEach((file) => {
+                    formData.append('resolutionImages', file);
+                });
+                await adminService.updateReportStatus(id, formData);
             } else {
                 await adminService.updateReportStatus(id, { status: data.status, notes: data.notes });
             }
@@ -73,7 +82,9 @@ export default function AdminReportDetail() {
             queryClient.invalidateQueries(['report', id]);
             queryClient.invalidateQueries(['admin-reports']);
             alert('Complaint updated successfully');
-            setNotes(''); // Clear notes after update
+            setNotes('');
+            setResolutionFiles([]);
+            setResolutionPreviews([]);
         },
         onError: (error) => {
             console.error(error);
@@ -81,13 +92,35 @@ export default function AdminReportDetail() {
         },
     });
 
+    const handleResolutionFileChange = (e) => {
+        const selected = Array.from(e.target.files);
+        const updated = [...resolutionFiles, ...selected].slice(0, 3);
+        setResolutionFiles(updated);
+        // Create previews
+        const newPreviews = updated.map(f => URL.createObjectURL(f));
+        resolutionPreviews.forEach(url => URL.revokeObjectURL(url));
+        setResolutionPreviews(newPreviews);
+    };
+
+    const removeResolutionFile = (index) => {
+        URL.revokeObjectURL(resolutionPreviews[index]);
+        const newFiles = resolutionFiles.filter((_, i) => i !== index);
+        const newPreviews = resolutionPreviews.filter((_, i) => i !== index);
+        setResolutionFiles(newFiles);
+        setResolutionPreviews(newPreviews);
+    };
+
     const handleUpdate = (e) => {
         e.preventDefault();
         if (status === 'rejected' && !notes) {
             alert('Please provide a reason for rejection in the notes field.');
             return;
         }
-        updateMutation.mutate({ status, notes });
+        if (status === 'resolved' && resolutionFiles.length === 0) {
+            alert('Please upload at least one resolution image as proof of fixed work.');
+            return;
+        }
+        updateMutation.mutate({ status, notes, files: resolutionFiles });
     };
 
     if (authLoading || isLoading) return <div className="flex justify-center mt-20"><Loader2 className="animate-spin h-10 w-10 text-blue-600" /></div>;
@@ -153,6 +186,18 @@ export default function AdminReportDetail() {
                             <h3 className="font-semibold mb-2">Location Map</h3>
                             <ReportMap reports={[report]} />
                         </div>
+
+                        {/* Resolution Evidence Section */}
+                        {report.resolutionMedia && report.resolutionMedia.length > 0 && (
+                            <div className="mt-6">
+                                <h3 className="font-semibold mb-2 text-green-700">✅ Resolution Evidence</h3>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {report.resolutionMedia.map((item, idx) => (
+                                        <img key={idx} src={item.url} alt={`Resolution ${idx + 1}`} className="rounded-lg w-full h-48 object-cover border-2 border-green-200" />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* History */}
@@ -217,6 +262,41 @@ export default function AdminReportDetail() {
                                     required={status === 'rejected'}
                                 ></textarea>
                             </div>
+
+                            {/* Resolution Image Upload - only when resolving */}
+                            {status === 'resolved' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Resolution Image(s) <span className="text-red-500">*</span>
+                                    </label>
+                                    <p className="text-xs text-gray-500 mb-2">Upload proof of the fixed work (max 3 images)</p>
+                                    <div className="flex items-center justify-center w-full">
+                                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                            <div className="flex flex-col items-center justify-center pt-3 pb-3">
+                                                <Camera className="w-6 h-6 mb-1 text-gray-500" />
+                                                <p className="text-xs text-gray-500"><span className="font-semibold">Click to upload</span></p>
+                                            </div>
+                                            <input type="file" className="hidden" multiple accept="image/*" onChange={handleResolutionFileChange} />
+                                        </label>
+                                    </div>
+                                    {resolutionPreviews.length > 0 && (
+                                        <div className="flex gap-2 mt-3 overflow-x-auto">
+                                            {resolutionPreviews.map((src, idx) => (
+                                                <div key={idx} className="relative flex-shrink-0">
+                                                    <img src={src} alt="Preview" className="h-16 w-16 object-cover rounded-md border" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeResolutionFile(idx)}
+                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             <button
                                 type="submit"

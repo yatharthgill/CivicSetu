@@ -69,6 +69,32 @@ export const uploadReportMedia = upload.fields([
 ]);
 
 /**
+ * Middleware to handle resolution image upload (admin resolving a report)
+ * Only accepts images, max 3 files
+ */
+const resolutionUpload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.fieldname === 'resolutionImages') {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+        return cb(new Error(`Invalid image type. Allowed: ${ALLOWED_IMAGE_TYPES.join(', ')}`), false);
+      }
+      cb(null, true);
+    } else {
+      cb(null, true); // Allow other fields to pass through (they won't have files)
+    }
+  },
+  limits: {
+    fileSize: MAX_IMAGE_SIZE,
+    files: 3,
+  },
+});
+
+export const uploadResolutionMedia = resolutionUpload.fields([
+  { name: 'resolutionImages', maxCount: 3 },
+]);
+
+/**
  * Middleware to validate file sizes per type
  */
 export const validateFileSizes = (req, res, next) => {
