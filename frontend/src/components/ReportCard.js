@@ -94,7 +94,7 @@ export default function ReportCard({ report }) {
                 </div>
 
                 <p className="text-xs text-gray-500 mb-2">
-                    Reported by {reporterName}
+                    Complained by {reporterName}
                 </p>
 
                 <p className="text-gray-600 text-xs line-clamp-2 mb-3 flex-1">
@@ -120,13 +120,13 @@ export default function ReportCard({ report }) {
                             <button
                                 onClick={async (e) => {
                                     e.preventDefault();
-                                    if (confirm('Are you sure you want to delete this report?')) {
+                                    if (confirm('Are you sure you want to delete this complaint?')) {
                                         try {
                                             await reportService.deleteReport(report._id);
                                             window.location.reload(); // Simple reload for now
                                         } catch (err) {
                                             console.error('Failed to delete', err);
-                                            alert('Failed to delete report');
+                                            alert('Failed to delete complaint');
                                         }
                                     }
                                 }}

@@ -23,7 +23,7 @@ export default function Navbar() {
 
                     <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
                         <Link href="/reports" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-                            View Reports
+                            View Complaints
                         </Link>
                         {user ? (
                             <>
@@ -34,7 +34,7 @@ export default function Navbar() {
                                     My Status
                                 </Link>
                                 <Link href="/submit" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
-                                    Report Issue
+                                    Complain
                                 </Link>
                                 {user.role === 'admin' && (
                                     <>
@@ -80,7 +80,7 @@ export default function Navbar() {
                 <div className="sm:hidden">
                     <div className="pt-2 pb-3 space-y-1">
                         <Link href="/reports" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                            View Reports
+                            View Complaints
                         </Link>
                         {user ? (
                             <>
@@ -91,7 +91,7 @@ export default function Navbar() {
                                     My Status
                                 </Link>
                                 <Link href="/submit" className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50">
-                                    Report Issue
+                                    Complain
                                 </Link>
                                 {user.role === 'admin' && (
                                     <>

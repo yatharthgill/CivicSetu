@@ -104,7 +104,7 @@ export default function SubmitReport() {
             router.push('/reports');
         } catch (error) {
             console.error('Error submitting report:', error);
-            alert('Failed to submit report. Please try again.');
+            alert('Failed to submit complaint. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -113,14 +113,14 @@ export default function SubmitReport() {
     if (!user) {
         return (
             <div className="text-center mt-10">
-                <p className="text-xl">Please login to submit a report.</p>
+                <p className="text-xl">Please login to submit a complaint.</p>
             </div>
         );
     }
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold mb-6">Submit a New Report</h1>
+            <h1 className="text-2xl font-bold mb-6">Submit a New Complaint</h1>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
@@ -248,7 +248,7 @@ export default function SubmitReport() {
                             Submitting...
                         </>
                     ) : (
-                        'Submit Report'
+                        'Submit Complaint'
                     )}
                 </button>
             </form>

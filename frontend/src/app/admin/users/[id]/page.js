@@ -161,7 +161,7 @@ export default function UserDetailsPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-gray-50 p-4 rounded-lg text-center">
                                 <div className="text-2xl font-bold text-gray-900">{stats?.totalReports || 0}</div>
-                                <div className="text-xs text-gray-500 uppercase mt-1">Total Reports</div>
+                                <div className="text-xs text-gray-500 uppercase mt-1">Total Complaints</div>
                             </div>
                             <div className="bg-green-50 p-4 rounded-lg text-center">
                                 <div className="text-2xl font-bold text-green-700">{stats?.resolved || 0}</div>
@@ -179,23 +179,23 @@ export default function UserDetailsPage() {
                     </div>
                 </div>
 
-                {/* Reports List */}
+                {/* Complaints List */}
                 <div className="lg:col-span-2">
                     <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-medium text-gray-900">Submitted Reports</h3>
+                            <h3 className="text-lg font-medium text-gray-900">Submitted Complaints</h3>
                         </div>
 
                         {reports.length === 0 ? (
                             <div className="p-8 text-center text-gray-500">
-                                No reports submitted by this user.
+                                No complaints submitted by this user.
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Complaint</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>

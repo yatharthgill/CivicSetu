@@ -33,31 +33,31 @@ export default async function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Submit Report Card */}
+                {/* Submit Complaint Card */}
                 <Link href="/submit" className="block group">
                     <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-gray-200">
                         <div className="p-6 flex flex-col items-center text-center">
                             <div className="p-3 bg-blue-100 rounded-full text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                 <PlusCircle size={32} />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900">Submit New Report</h3>
+                            <h3 className="text-lg font-medium text-gray-900">Submit New Complaint</h3>
                             <p className="mt-2 text-sm text-gray-500">
-                                Report a civic issue in your area. Add photos and location details.
+                                Complain about a civic issue in your area. Add photos and location details.
                             </p>
                         </div>
                     </div>
                 </Link>
 
-                {/* My Reports Card */}
+                {/* My Complaints Card */}
                 <Link href="/report-status" className="block group">
                     <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-gray-200">
                         <div className="p-6 flex flex-col items-center text-center">
                             <div className="p-3 bg-green-100 rounded-full text-green-600 mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors">
                                 <List size={32} />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900">Report Status</h3>
+                            <h3 className="text-lg font-medium text-gray-900">Complaint Status</h3>
                             <p className="mt-2 text-sm text-gray-500">
-                                Check the current status of your submitted reports and open them for full details.
+                                Check the current status of your submitted complaints and open them for full details.
                             </p>
                         </div>
                     </div>
@@ -71,7 +71,7 @@ export default async function Dashboard() {
                             </div>
                             <h3 className="text-lg font-medium text-gray-900">View Map</h3>
                             <p className="mt-2 text-sm text-gray-500">
-                                Explore reports in your area on an interactive map.
+                                Explore complaints in your area on an interactive map.
                             </p>
                         </div>
                     </div>

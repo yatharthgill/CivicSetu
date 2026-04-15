@@ -8,12 +8,12 @@ export default function Home() {
         Make Your City <span className="text-blue-600">Better</span>
       </h1>
       <p className="text-xl text-gray-600 mb-8 max-w-2xl">
-        Report issues like potholes, garbage, or streetlights directly to the municipal corporation. Track progress in real-time.
+        Complain about issues like potholes, garbage, or streetlights directly to the municipal corporation. Track progress in real-time.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-16">
         <Link href="/submit" className="bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition shadow-lg">
-          Report an Issue
+          Register a Complaint
         </Link>
         <Link href="/reports" className="bg-white text-gray-700 border border-gray-300 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-50 transition shadow-sm">
           View Live Map
@@ -40,7 +40,7 @@ export default function Home() {
             <CheckCircle size={24} />
           </div>
           <h3 className="text-xl font-semibold mb-2">Get Resolved</h3>
-          <p className="text-gray-600">Track the status of your report and get notified when it's fixed.</p>
+          <p className="text-gray-600">Track the status of your complaint and get notified when it's fixed.</p>
         </div>
       </div>
     </div>

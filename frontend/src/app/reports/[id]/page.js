@@ -67,13 +67,13 @@ export default function ReportDetail() {
     if (error) {
         return (
             <div className="text-center mt-20">
-                <p className="text-red-600 text-xl mb-4">Failed to load report details.</p>
-                <Link href="/reports" className="text-blue-600 hover:underline">Back to Reports</Link>
+                <p className="text-red-600 text-xl mb-4">Failed to load complaint details.</p>
+                <Link href="/reports" className="text-blue-600 hover:underline">Back to Complaints</Link>
             </div>
         );
     }
 
-    if (!report) return <div className="text-center mt-20">Report not found</div>;
+    if (!report) return <div className="text-center mt-20">Complaint not found</div>;
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -95,7 +95,7 @@ export default function ReportDetail() {
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
             <Link href="/reports" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-6">
-                <ArrowLeft size={20} className="mr-2" /> Back to Reports
+                <ArrowLeft size={20} className="mr-2" /> Back to Complaints
             </Link>
 
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -118,13 +118,13 @@ export default function ReportDetail() {
                             {user && reportOwnerId === user._id && (
                                 <button
                                     onClick={async () => {
-                                        if (confirm('Are you sure you want to delete this report?')) {
+                                        if (confirm('Are you sure you want to delete this complaint?')) {
                                             try {
                                                 await reportService.deleteReport(report._id);
                                                 router.push('/reports');
                                             } catch (err) {
                                                 console.error('Failed to delete', err);
-                                                alert('Failed to delete report');
+                                                alert('Failed to delete complaint');
                                             }
                                         }
                                     }}
@@ -148,12 +148,12 @@ export default function ReportDetail() {
                             <div className="flex items-center">
                                 <Calendar className="w-5 h-5 text-gray-400 mr-2" />
                                 <div>
-                                    <p className="text-sm font-medium text-gray-500">Reported On</p>
+                                    <p className="text-sm font-medium text-gray-500">Complained On</p>
                                     <p className="text-gray-900">{new Date(report.createdAt).toLocaleDateString('en-IN')}</p>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-gray-500">Reported By</p>
+                                <p className="text-sm font-medium text-gray-500">Complained By</p>
                                 <p className="text-gray-900">{reporterName}</p>
                             </div>
                             <div>

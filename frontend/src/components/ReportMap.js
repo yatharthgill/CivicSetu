@@ -47,7 +47,7 @@ export default function ReportMap({ reports }) {
                                         </span>
                                     </div>
                                     {report.media && report.media.length > 0 && report.media[0].type === 'image' && (
-                                        <img src={report.media[0].url} alt="Report" className="mt-2 w-full h-32 object-cover rounded mb-2" />
+                                        <img src={report.media[0].url} alt="Complaint" className="mt-2 w-full h-32 object-cover rounded mb-2" />
                                     )}
                                     <a href={`/reports/${report._id}`} className="block text-center w-full bg-blue-600 !text-white text-sm py-1.5 rounded hover:bg-blue-700 transition">
                                         View Details

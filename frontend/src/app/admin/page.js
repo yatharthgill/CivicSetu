@@ -68,7 +68,7 @@ export default function AdminDashboard() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                    <h3 className="text-gray-500 text-sm font-medium">Total Reports</h3>
+                    <h3 className="text-gray-500 text-sm font-medium">Total Complaints</h3>
                     <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalReports}</p>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
                 </button>
             </div>
 
-            {/* Reports Table */}
+            {/* Complaints Table */}
             <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

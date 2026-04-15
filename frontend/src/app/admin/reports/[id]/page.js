@@ -72,12 +72,12 @@ export default function AdminReportDetail() {
         onSuccess: () => {
             queryClient.invalidateQueries(['report', id]);
             queryClient.invalidateQueries(['admin-reports']);
-            alert('Report updated successfully');
+            alert('Complaint updated successfully');
             setNotes(''); // Clear notes after update
         },
         onError: (error) => {
             console.error(error);
-            alert('Failed to update report: ' + (error.response?.data?.message || error.message));
+            alert('Failed to update complaint: ' + (error.response?.data?.message || error.message));
         },
     });
 
@@ -91,7 +91,7 @@ export default function AdminReportDetail() {
     };
 
     if (authLoading || isLoading) return <div className="flex justify-center mt-20"><Loader2 className="animate-spin h-10 w-10 text-blue-600" /></div>;
-    if (!report) return <div className="text-center mt-20">Report not found</div>;
+    if (!report) return <div className="text-center mt-20">Complaint not found</div>;
 
     return (
         <div className="max-w-5xl mx-auto">
@@ -129,7 +129,7 @@ export default function AdminReportDetail() {
                                 {report.location.name}
                             </div>
                             <div>
-                                <span className="font-semibold block">Reported By:</span>
+                                <span className="font-semibold block">Complained By:</span>
                                 {report.user?.name || 'Anonymous'}
                             </div>
                         </div>
@@ -184,7 +184,7 @@ export default function AdminReportDetail() {
                 {/* Sidebar Actions */}
                 <div className="lg:col-span-1">
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 sticky top-6">
-                        <h3 className="font-bold text-lg mb-4">Manage Report</h3>
+                        <h3 className="font-bold text-lg mb-4">Manage Complaint</h3>
                         <form onSubmit={handleUpdate} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Update Status</label>
@@ -223,7 +223,7 @@ export default function AdminReportDetail() {
                                 disabled={updateMutation.isPending}
                                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:bg-blue-400"
                             >
-                                {updateMutation.isPending ? 'Updating...' : 'Update Report'}
+                                {updateMutation.isPending ? 'Updating...' : 'Update Complaint'}
                             </button>
                         </form>
                     </div>

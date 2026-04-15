@@ -139,7 +139,7 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
     if (!user) {
         return (
             <div className="text-center mt-20">
-                <p className="text-xl mb-4">Please login to view reports.</p>
+                <p className="text-xl mb-4">Please login to view complaints.</p>
                 <button
                     onClick={() => router.push('/login')}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -154,7 +154,7 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
                 <h1 className="text-3xl font-bold text-gray-900">
-                    {filter === 'all' ? 'All Reports' : filter === 'my' ? 'My Reports' : 'Nearby Reports'}
+                    {filter === 'all' ? 'All Complaints' : filter === 'my' ? 'My Complaints' : 'Nearby Complaints'}
                 </h1>
 
                 <div className="flex items-center space-x-4">
@@ -164,13 +164,13 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
                             onClick={() => handleFilterChange('all')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
                         >
-                            All Reports
+                            All Complaints
                         </button>
                         <button
                             onClick={() => handleFilterChange('my')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition ${filter === 'my' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
                         >
-                            My Reports
+                            My Complaints
                         </button>
                         <button
                             onClick={() => handleFilterChange('nearby')}
@@ -200,20 +200,20 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
 
             {filter === 'nearby' && locationError && (
                 <div className="bg-red-50 text-red-700 p-4 rounded-md mb-6">
-                    {locationError}. Please enable location services to see nearby reports.
+                    {locationError}. Please enable location services to see nearby complaints.
                 </div>
             )}
 
             {filter === 'nearby' && sameCityOnly && detectedCity && (
                 <div className="bg-blue-50 text-blue-700 p-4 rounded-md mb-6">
-                    Showing nearby reports from {detectedCity}.
+                    Showing nearby complaints from {detectedCity}.
                 </div>
             )}
 
             {isLoading ? (
                 <div className="flex justify-center mt-20"><Loader2 className="animate-spin h-10 w-10 text-blue-600" /></div>
             ) : error ? (
-                <div className="text-center mt-20 text-red-600">Failed to load reports</div>
+                <div className="text-center mt-20 text-red-600">Failed to load complaints</div>
             ) : (
                 <>
                     {viewMode === 'map' ? (
@@ -226,13 +226,13 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
                                 ))
                             ) : (
                                 <div className="col-span-1 md:col-span-2 text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                                    <p className="text-gray-500 text-lg">No reports found.</p>
+                                    <p className="text-gray-500 text-lg">No complaints found.</p>
                                     {filter === 'my' && (
                                         <button
                                             onClick={() => router.push('/submit')}
                                             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                                         >
-                                            Submit Your First Report
+                                            Submit Your First Complaint
                                         </button>
                                     )}
                                 </div>
