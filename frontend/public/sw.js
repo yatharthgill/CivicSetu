@@ -1,4 +1,4 @@
-const CACHE_NAME = 'civicsetu-v1';
+const CACHE_NAME = 'civicsetu-v2';
 const OFFLINE_URL = '/offline';
 
 self.addEventListener('install', (event) => {
@@ -32,8 +32,14 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const cloned = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
+          if (response && response.status === 200) {
+            try {
+              const cloned = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
+            } catch {
+              // Ignore cache write failures and continue serving the response.
+            }
+          }
           return response;
         })
         .catch(async () => {
@@ -50,7 +56,12 @@ self.addEventListener('fetch', (event) => {
       const networkFetch = fetch(request)
         .then((response) => {
           if (response && response.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+            try {
+              const cloned = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
+            } catch {
+              // Ignore cache write failures and continue serving the response.
+            }
           }
           return response;
         })
