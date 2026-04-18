@@ -22,6 +22,7 @@ const requiredEnvVars = [
   'CLOUDINARY_API_SECRET',
 ];
 const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+const isProduction = process.env.NODE_ENV === 'production';
 
 if (missingEnvVars.length > 0) {
   console.error('🚨 Missing required environment variables:', missingEnvVars.join(', '));
@@ -36,7 +37,27 @@ if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32) {
   process.exit(1);
 }
 
+if (isProduction) {
+  // Keep production logs minimal and deterministic: disable ad-hoc console output.
+  console.log = () => {};
+  console.info = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+  console.debug = () => {};
+}
+
 const app = express();
+app.set('trust proxy', 1);
+
+if (isProduction) {
+  // Only request connection logs in production.
+  app.use((req, res, next) => {
+    process.stdout.write(
+      `[REQ] ${new Date().toISOString()} ${req.ip} ${req.method} ${req.originalUrl}\n`
+    );
+    next();
+  });
+}
 
 // --- Security headers ---
 app.use((req, res, next) => {
