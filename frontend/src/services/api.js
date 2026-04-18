@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    baseURL: '/api',
     withCredentials: true, // Important for HttpOnly cookies
     timeout: 15000,
     headers: {
