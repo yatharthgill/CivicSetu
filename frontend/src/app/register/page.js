@@ -63,7 +63,7 @@ export default function Register() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+        <div className="max-w-md mx-auto mt-8 sm:mt-10 p-5 sm:p-6 bg-white rounded-lg shadow-md animate-fade-in-up">
             <h2 className="text-2xl font-bold mb-6 text-center">
                 {step === 'register' ? 'Register' : 'Verify OTP'}
             </h2>

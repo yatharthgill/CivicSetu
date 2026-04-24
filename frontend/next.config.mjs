@@ -1,7 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdnjs.cloudflare.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.tile.openstreetmap.org',
+      },
+    ],
+  },
   async rewrites() {
     return [
       {

@@ -6,11 +6,12 @@ import { useAuth } from '../../context/AuthContext';
 import reportService from '../../services/reportService';
 import { useRouter } from 'next/navigation';
 import { Camera, Loader2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 // Dynamically import LocationPicker to avoid SSR issues with Leaflet
 const LocationPicker = dynamic(() => import('../../components/LocationPicker'), {
     ssr: false,
-    loading: () => <div className="h-64 bg-gray-100 flex items-center justify-center">Loading Map...</div>
+    loading: () => <div className="h-48 sm:h-64 bg-gray-100 flex items-center justify-center skeleton">Loading Map...</div>
 });
 
 export default function SubmitReport() {
@@ -44,15 +45,12 @@ export default function SubmitReport() {
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
-        // Append new files to existing ones
         const updatedFiles = [...files, ...selectedFiles];
         if (updatedFiles.length > 5) {
-            alert('Maximum 5 files allowed');
+            toast.error('Maximum 5 files allowed');
             return;
         }
         setFiles(updatedFiles);
-
-        // Create previews
         const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
         setPreviews(prev => [...prev, ...newPreviews]);
     };
@@ -60,8 +58,6 @@ export default function SubmitReport() {
     const removeFile = (index) => {
         const newFiles = files.filter((_, i) => i !== index);
         setFiles(newFiles);
-
-        // Revoke old URL to avoid memory leaks
         URL.revokeObjectURL(previews[index]);
         const newPreviews = previews.filter((_, i) => i !== index);
         setPreviews(newPreviews);
@@ -70,7 +66,7 @@ export default function SubmitReport() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.latitude || !formData.longitude) {
-            alert('Please select a location on the map');
+            toast.error('Please select a location on the map');
             return;
         }
 
@@ -81,14 +77,12 @@ export default function SubmitReport() {
         data.append('category', formData.category);
         data.append('severity', formData.severity);
 
-        // Backend expects location as a JSON string
         const locationData = {
             coordinates: [parseFloat(formData.longitude), parseFloat(formData.latitude)],
             name: formData.locationName
         };
         data.append('location', JSON.stringify(locationData));
 
-        // Backend expects specific keys for media types
         files.forEach(file => {
             if (file.type.startsWith('image/')) {
                 data.append('images', file);
@@ -101,10 +95,11 @@ export default function SubmitReport() {
 
         try {
             await reportService.createReport(data);
+            toast.success('Complaint submitted successfully!');
             router.push('/reports');
         } catch (error) {
             console.error('Error submitting report:', error);
-            alert('Failed to submit complaint. Please try again.');
+            toast.error('Failed to submit complaint. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -119,33 +114,35 @@ export default function SubmitReport() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold mb-6">Submit a New Complaint</h1>
+        <div className="max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
+            <h1 className="text-xl sm:text-2xl font-bold mb-6">Submit a New Complaint</h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 {/* Title */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Title</label>
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
                     <input
                         type="text"
+                        id="title"
                         name="title"
                         value={formData.title}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-gray-900"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2.5 text-gray-900"
                         placeholder="Brief title of the issue"
                     />
                 </div>
 
                 {/* Category & Severity */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Category</label>
+                        <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
                         <select
+                            id="category"
                             name="category"
                             value={formData.category}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-gray-900"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2.5 text-gray-900"
                         >
                             <option value="sanitation">Sanitation</option>
                             <option value="public_works">Public Works</option>
@@ -156,12 +153,13 @@ export default function SubmitReport() {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Severity</label>
+                        <label htmlFor="severity" className="block text-sm font-medium text-gray-700">Severity</label>
                         <select
+                            id="severity"
                             name="severity"
                             value={formData.severity}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-gray-900"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2.5 text-gray-900"
                         >
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
@@ -173,27 +171,29 @@ export default function SubmitReport() {
 
                 {/* Description */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
                     <textarea
+                        id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleInputChange}
                         rows="4"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-gray-900"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2.5 text-gray-900"
                         placeholder="Describe the issue in detail..."
                     ></textarea>
                 </div>
 
                 {/* Location */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <label htmlFor="locationName" className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                     <input
                         type="text"
+                        id="locationName"
                         name="locationName"
                         value={formData.locationName}
                         onChange={handleInputChange}
                         required
-                        className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 text-gray-900"
+                        className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2.5 text-gray-900"
                         placeholder="Enter address or landmark"
                     />
                     <p className="text-xs text-gray-500 mb-2">Click on the map to pinpoint the exact location.</p>
@@ -209,24 +209,25 @@ export default function SubmitReport() {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Photos/Videos</label>
                     <div className="flex items-center justify-center w-full">
-                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <Camera className="w-8 h-8 mb-4 text-gray-500" />
-                                <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-gray-500">PNG, JPG, MP4 (MAX. 5 files)</p>
+                        <label className="flex flex-col items-center justify-center w-full h-28 sm:h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                            <div className="flex flex-col items-center justify-center py-4">
+                                <Camera className="w-8 h-8 mb-3 text-gray-500" />
+                                <p className="mb-1 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p className="text-xs text-gray-500">PNG, JPG, MP4, MP3, WAV (MAX. 5 files)</p>
                             </div>
-                            <input type="file" className="hidden" multiple accept="image/*,video/*" onChange={handleFileChange} />
+                            <input type="file" className="hidden" multiple accept="image/*,video/*,audio/*" onChange={handleFileChange} />
                         </label>
                     </div>
                     {previews.length > 0 && (
-                        <div className="flex gap-2 mt-4 overflow-x-auto">
+                        <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
                             {previews.map((src, idx) => (
                                 <div key={idx} className="relative flex-shrink-0">
                                     <img src={src} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
                                     <button
                                         type="button"
                                         onClick={() => removeFile(idx)}
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 min-w-[24px] min-h-[24px]"
+                                        aria-label={`Remove file ${idx + 1}`}
                                     >
                                         ×
                                     </button>
@@ -240,7 +241,7 @@ export default function SubmitReport() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 min-h-[48px]"
                 >
                     {loading ? (
                         <>

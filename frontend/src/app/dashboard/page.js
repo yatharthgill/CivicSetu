@@ -80,7 +80,7 @@ export default async function Dashboard() {
 
             {user.role === 'admin' && (
                 <div className="mt-8">
-                    <Link href="/admin" className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                    <Link href="/admin" className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 min-h-[48px]">
                         Go to Admin Dashboard
                     </Link>
                 </div>

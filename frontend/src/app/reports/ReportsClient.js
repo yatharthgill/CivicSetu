@@ -10,7 +10,7 @@ import reportService from '../../services/reportService';
 
 const ReportMap = dynamic(() => import('../../components/ReportMap'), {
     ssr: false,
-    loading: () => <div className="h-[500px] bg-gray-100 flex items-center justify-center">Loading Map...</div>
+    loading: () => <div className="h-[300px] sm:h-[400px] lg:h-[500px] bg-gray-100 flex items-center justify-center skeleton">Loading Map...</div>
 });
 
 export default function ReportsClient({ initialReports, initialFilter, initialView, sameCityOnly, user }) {
@@ -87,7 +87,6 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
     }, [filter, location, loadNearbyLocation]);
 
     const handleFilterChange = (nextFilter) => {
-        // Update URL to leverage SSR and sharable links
         const params = new URLSearchParams(window.location.search);
         params.set('filter', nextFilter);
         router.push(`/reports?${params.toString()}`);
@@ -111,15 +110,13 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
         setViewMode(mode);
     };
 
-    // We only use React Query to fetch dynamically IF we are filtering by 'nearby'. 
-    // Otherwise, we rely on the Server Component's initialReports.
     const { data: nearbyReportsData, isLoading: isLoadingNearby, error: nearbyError } = useQuery({
         queryKey: ['reports', 'nearby', location, detectedCity, sameCityOnly],
         queryFn: async () => {
             const params = {
                 lat: location.lat,
                 lng: location.lng,
-                radius: 5000 // 5km radius
+                radius: 5000
             };
             if (sameCityOnly && detectedCity) {
                 params.city = detectedCity;
@@ -132,7 +129,6 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
     const isPreparingNearbyResults = filter === 'nearby' && !!location && sameCityOnly && isResolvingCity;
     const isLoading = isPreparingNearbyResults || isLoadingNearby;
     
-    // Determine active reports source
     const reports = filter === 'nearby' ? (nearbyReportsData?.data?.reports || []) : initialReports;
     const error = filter === 'nearby' ? nearbyError : null;
 
@@ -142,7 +138,7 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
                 <p className="text-xl mb-4">Please login to view complaints.</p>
                 <button
                     onClick={() => router.push('/login')}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 min-h-[48px]"
                 >
                     Login
                 </button>
@@ -151,46 +147,49 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-                <h1 className="text-3xl font-bold text-gray-900">
+        <div className="max-w-7xl mx-auto">
+            {/* Header and controls */}
+            <div className="flex flex-col gap-4 mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                     {filter === 'all' ? 'All Complaints' : filter === 'my' ? 'My Complaints' : 'Nearby Complaints'}
                 </h1>
 
-                <div className="flex items-center space-x-4">
-                    {/* Filter Toggle */}
-                    <div className="bg-gray-100 p-1 rounded-lg flex">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    {/* Filter Toggle — scrollable on mobile */}
+                    <div className="bg-gray-100 p-1 rounded-lg flex overflow-x-auto no-scrollbar">
                         <button
                             onClick={() => handleFilterChange('all')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'all' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
                         >
                             All Complaints
                         </button>
                         <button
                             onClick={() => handleFilterChange('my')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition ${filter === 'my' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'my' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
                         >
                             My Complaints
                         </button>
                         <button
                             onClick={() => handleFilterChange('nearby')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition ${filter === 'nearby' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'nearby' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
                         >
                             Nearby
                         </button>
                     </div>
 
                     {/* View Mode Toggle */}
-                    <div className="flex space-x-2 bg-gray-100 p-1 rounded-lg">
+                    <div className="flex space-x-2 bg-gray-100 p-1 rounded-lg self-start">
                         <button
                             onClick={() => handleViewChange('list')}
-                            className={`p-2 rounded-md flex items-center ${viewMode === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`p-2 rounded-md flex items-center min-w-[44px] min-h-[44px] justify-center ${viewMode === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            aria-label="List view"
                         >
                             <List size={20} />
                         </button>
                         <button
                             onClick={() => handleViewChange('map')}
-                            className={`p-2 rounded-md flex items-center ${viewMode === 'map' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`p-2 rounded-md flex items-center min-w-[44px] min-h-[44px] justify-center ${viewMode === 'map' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            aria-label="Map view"
                         >
                             <MapIcon size={20} />
                         </button>
@@ -219,18 +218,18 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
                     {viewMode === 'map' ? (
                         <ReportMap reports={reports} />
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {reports.length > 0 ? (
                                 reports.map((report) => (
                                     <ReportCard key={report._id} report={report} />
                                 ))
                             ) : (
-                                <div className="col-span-1 md:col-span-2 text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                                <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                                     <p className="text-gray-500 text-lg">No complaints found.</p>
                                     {filter === 'my' && (
                                         <button
                                             onClick={() => router.push('/submit')}
-                                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 min-h-[48px]"
                                         >
                                             Submit Your First Complaint
                                         </button>
