@@ -45,18 +45,18 @@ router.get('/my-reports', protect, getMyReports);
 /**
  * @route   GET /api/reports/all-reports
  * @desc    Get all reports with pagination and filters
- * @access  Private
+ * @access  Public
  * @query   ?page=1&limit=20&status=reported&category=sanitation&sortBy=createdAt&order=desc
  */
-router.get('/all-reports', protect, getAllReports);
+router.get('/all-reports', getAllReports);
 
 /**
  * @route   GET /api/reports/nearby
  * @desc    Get reports near a location (geospatial query)
- * @access  Private
+ * @access  Public
  * @query   ?lat=28.6139&lng=77.2090&radius=5000&limit=100&status=reported&category=sanitation
  */
-router.get('/nearby', protect, getNearbyReports);
+router.get('/nearby', getNearbyReports);
 
 /**
  * @route   GET /api/reports/:reportId

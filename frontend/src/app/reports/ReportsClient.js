@@ -132,10 +132,12 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
     const reports = filter === 'nearby' ? (nearbyReportsData?.data?.reports || []) : initialReports;
     const error = filter === 'nearby' ? nearbyError : null;
 
-    if (!user) {
+
+    // Guests are redirected to login only if they try to access 'my' complaints
+    if (!user && filter === 'my') {
         return (
             <div className="text-center mt-20">
-                <p className="text-xl mb-4">Please login to view complaints.</p>
+                <p className="text-xl mb-4">Please login to view your complaints.</p>
                 <button
                     onClick={() => router.push('/login')}
                     className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 min-h-[48px]"
@@ -163,12 +165,14 @@ export default function ReportsClient({ initialReports, initialFilter, initialVi
                         >
                             All Complaints
                         </button>
-                        <button
-                            onClick={() => handleFilterChange('my')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'my' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
-                        >
-                            My Complaints
-                        </button>
+                        {user && (
+                            <button
+                                onClick={() => handleFilterChange('my')}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'my' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}
+                            >
+                                My Complaints
+                            </button>
+                        )}
                         <button
                             onClick={() => handleFilterChange('nearby')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition whitespace-nowrap ${filter === 'nearby' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'}`}

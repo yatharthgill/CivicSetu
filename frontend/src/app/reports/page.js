@@ -23,8 +23,10 @@ export default async function ReportsPage({ searchParams }) {
         // User not logged in
     }
 
-    // Server-side fetching of static reports filter
-    if (user && (initialFilter === 'all' || initialFilter === 'my')) {
+    // Server-side fetching of reports
+    // For 'all' filter: public — fetch without needing login
+    // For 'my' filter: requires user to be logged in
+    if (initialFilter === 'all' || (user && initialFilter === 'my')) {
         try {
             const endpoint = initialFilter === 'all' ? '/reports/all-reports' : '/reports/my-reports';
             const data = await serverFetch(endpoint);
