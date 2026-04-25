@@ -51,7 +51,7 @@ export default function ForgotPassword() {
             {!success && (
                 <>
                     <p className="text-gray-600 text-sm mb-6">
-                        Enter your email address and we&apos;ll send you a code to reset your password.
+                        Enter your email address and we'll send you a code to reset your password.
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,7 +92,7 @@ export default function ForgotPassword() {
 
             {success && (
                 <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600 mb-2">Didn&apos;t receive the email?</p>
+                    <p className="text-sm text-gray-600 mb-2">Didn't receive the email?</p>
                     <button
                         onClick={() => {
                             setSuccess(false);

@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import { applyPriorityForReport } from '../utils/priorityEngine.js';
 import { publishRealtimeEvent } from '../utils/realtimeBus.js';
 import { sendReportStatusUpdateEmail } from '../utils/emailService.js';
+import { uploadImage } from '../utils/mediaService.js';
 
 const notifyReportStatusUpdate = async ({ report, status, notes }) => {
   if (!report?.user?.email) return;
@@ -226,6 +227,29 @@ export const updateReportStatus = async (req, res) => {
       await applyPriorityForReport(report);
     } catch (priorityError) {
       console.error('Priority update skipped during status update:', priorityError.message);
+    }
+
+    // If resolving, require at least one resolution image
+    if (status === 'resolved') {
+      const resolutionFiles = req.files?.resolutionImages;
+      if (!resolutionFiles || resolutionFiles.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'At least one resolution image is required when resolving a complaint',
+        });
+      }
+
+      // Upload resolution images to Cloudinary
+      const resolutionMedia = [];
+      for (const file of resolutionFiles) {
+        const result = await uploadImage(file.buffer, file.originalname, reportId);
+        resolutionMedia.push({
+          type: 'image',
+          url: result.url,
+          thumbnail: result.thumbnailUrl,
+        });
+      }
+      report.resolutionMedia = resolutionMedia;
     }
 
     // DON'T manually add to history - let the pre-save hook handle it

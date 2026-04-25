@@ -1,5 +1,3 @@
-'use client';
-
 export default function OfflinePage() {
   return (
     <div className="max-w-xl mx-auto mt-20 bg-white border border-gray-200 rounded-xl shadow-sm p-8 text-center">

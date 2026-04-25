@@ -14,7 +14,8 @@ export default function LiveUpdatesBridge() {
   useEffect(() => {
     if (!user) return;
 
-    const streamUrl = '/api/events/stream';
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
+    const streamUrl = `${apiBase}/events/stream`;
 
     const eventSource = new EventSource(streamUrl, { withCredentials: true });
 

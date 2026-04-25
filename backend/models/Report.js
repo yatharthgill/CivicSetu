@@ -133,6 +133,7 @@ const reportSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    resolutionMedia: [mediaSchema],
     department: {
       type: String,
       enum: DEPARTMENT_ENUM,

@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import User from "../models/User.js"; // <-- update path to your user model
+import path from "path";
+import { fileURLToPath } from "url";
+import User from "../models/User.js";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 async function deleteAllUsers() {
   const uri = process.env.MONGO_URI;
@@ -13,19 +18,19 @@ async function deleteAllUsers() {
   }
 
   try {
-    console.log("✅ Connecting to MongoDB...");
+    console.log("🔄 Connecting to MongoDB...");
     await mongoose.connect(uri);
+    console.log("✅ Connected to MongoDB");
 
-    const result = await User.updateOne(
-  { email: "john.doe@example.com" },
-  { $set: { role: "admin" } }
-);
-    console.log(`✅ Updated user role to admin`);
+    // Delete all users
+    const result = await User.deleteMany({});
+    console.log(`✅ Deleted ${result.deletedCount} users from the database`);
 
   } catch (err) {
     console.error("❌ Error:", err);
   } finally {
     await mongoose.disconnect();
+    console.log("🔌 Disconnected from MongoDB");
     process.exit();
   }
 }

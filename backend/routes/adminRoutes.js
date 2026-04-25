@@ -14,6 +14,10 @@ import {
 } from '../controllers/adminController.js';
 import { protect, restrictTo } from '../middleware/auth.js';
 import {
+  uploadResolutionMedia,
+  handleMulterError,
+} from '../middleware/uploadMiddleware.js';
+import {
   validateUpdateStatus,
   validateRejectReport,
   validateUpdateUserStatus,
@@ -59,7 +63,7 @@ router.get('/reports/:reportId', getReportDetails);
  * @access  Private/Admin
  * @body    { status: 'acknowledged', notes: 'We are looking into this' }
  */
-router.patch('/reports/:reportId/status', validateUpdateStatus, updateReportStatus);
+router.patch('/reports/:reportId/status', uploadResolutionMedia, handleMulterError, validateUpdateStatus, updateReportStatus);
 
 /**
  * @route   PATCH /api/admin/reports/:reportId/reject

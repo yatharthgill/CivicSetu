@@ -1,12 +1,12 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import authService from '../../services/authService';
 
-function ResetPasswordContent() {
+export default function ResetPassword() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
@@ -214,13 +214,5 @@ function ResetPasswordContent() {
                 </>
             )}
         </div>
-    );
-}
-
-export default function ResetPassword() {
-    return (
-        <Suspense fallback={<div className="flex justify-center mt-20">Loading...</div>}>
-            <ResetPasswordContent />
-        </Suspense>
     );
 }

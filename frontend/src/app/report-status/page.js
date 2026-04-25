@@ -91,7 +91,7 @@ export default function ReportStatusPage() {
     if (error) {
         return (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-                <p className="text-lg text-red-600 mb-4">Failed to load your report statuses.</p>
+                <p className="text-lg text-red-600 mb-4">Failed to load your complaint statuses.</p>
                 <button
                     onClick={() => router.refresh()}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -111,15 +111,15 @@ export default function ReportStatusPage() {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">My Report Status</h1>
+                <h1 className="text-3xl font-bold text-gray-900">My Complaint Status</h1>
                 <p className="mt-2 text-gray-600">
-                    Check the latest status of every report you have submitted and open a report to see full details and updates.
+                    Check the latest status of every complaint you have submitted and open a complaint to see full details and updates.
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
                 <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-                    <p className="text-sm text-gray-500">Total Reports</p>
+                    <p className="text-sm text-gray-500">Total Complaints</p>
                     <p className="mt-2 text-3xl font-bold text-gray-900">{totalReports}</p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
@@ -139,13 +139,13 @@ export default function ReportStatusPage() {
             {reports.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                     <FileText className="mx-auto h-10 w-10 text-gray-400" />
-                    <h2 className="mt-4 text-xl font-semibold text-gray-900">No reports submitted yet</h2>
-                    <p className="mt-2 text-gray-500">Once you submit a report, its current status will appear here.</p>
+                    <h2 className="mt-4 text-xl font-semibold text-gray-900">No complaints submitted yet</h2>
+                    <p className="mt-2 text-gray-500">Once you submit a complaint, its current status will appear here.</p>
                     <Link
                         href="/submit"
                         className="mt-6 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
-                        Submit a Report
+                        Submit a Complaint
                     </Link>
                 </div>
             ) : (

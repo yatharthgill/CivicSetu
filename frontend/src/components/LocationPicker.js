@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -47,14 +47,23 @@ export default function LocationPicker({ onLocationSelect }) {
     }, [position, onLocationSelect]);
 
     return (
-        <div className="h-64 w-full rounded-md overflow-hidden border border-gray-300 z-0">
-            <MapContainer center={[20.5937, 78.9629]} zoom={5} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <LocationMarker position={position} setPosition={setPosition} />
-            </MapContainer>
+        <div className="relative">
+            <div className="h-48 sm:h-64 w-full rounded-md overflow-hidden border border-gray-300 z-0">
+                <MapContainer center={[20.5937, 78.9629]} zoom={5} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <LocationMarker position={position} setPosition={setPosition} />
+                </MapContainer>
+            </div>
+            {!position && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black/50 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm">
+                        Tap on the map to select location
+                    </span>
+                </div>
+            )}
         </div>
     );
 }

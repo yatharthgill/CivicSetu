@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Loader2, Search, Trash2, UserCheck, UserX, Shield, ShieldAlert } from 'lucide-react';
+import { Loader2, Search, Trash2, UserCheck, UserX, Shield } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function UsersPage() {
@@ -74,8 +74,9 @@ export default function UsersPage() {
 
     return (
         <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">User Management</h1>
+            {/* Header — stacks on mobile */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold">User Management</h1>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     <input
@@ -83,81 +84,84 @@ export default function UsersPage() {
                         placeholder="Search users..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none w-full sm:w-auto"
                     />
                 </div>
             </div>
 
+            {/* Table — horizontally scrollable */}
             <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reports</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {users.map((user) => (
-                            <tr key={user._id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                                            {user.name.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                            <div className="text-sm text-gray-500">{user.email}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
-                                        }`}>
-                                        {user.role === 'admin' ? <Shield size={12} className="mr-1" /> : null}
-                                        {user.role.toUpperCase()}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                        }`}>
-                                        {user.isActive ? 'Active' : 'Inactive'}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {user.reportCount || 0}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {new Date(user.createdAt).toLocaleDateString('en-IN')}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div className="flex justify-end space-x-3">
-                                        <button
-                                            onClick={() => toggleStatusMutation.mutate({ id: user._id, isActive: !user.isActive })}
-                                            className={`${user.isActive ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'}`}
-                                            title={user.isActive ? "Deactivate User" : "Activate User"}
-                                        >
-                                            {user.isActive ? <UserX size={18} /> : <UserCheck size={18} />}
-                                        </button>
-                                        <Link href={`/admin/users/${user._id}`} className="text-blue-600 hover:text-blue-900" title="View Details">
-                                            View
-                                        </Link>
-                                        <button
-                                            onClick={() => deleteUserMutation.mutate(user._id)}
-                                            className="text-red-600 hover:text-red-900"
-                                            title="Delete User"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Complaints</th>
+                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {users.map((u) => (
+                                <tr key={u._id} className="hover:bg-gray-50">
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                        <div className="flex items-center">
+                                            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0">
+                                                {u.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="ml-4">
+                                                <div className="text-sm font-medium text-gray-900">{u.name}</div>
+                                                <div className="text-sm text-gray-500">{u.email}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                                            }`}>
+                                            {u.role === 'admin' ? <Shield size={12} className="mr-1" /> : null}
+                                            {u.role.toUpperCase()}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                            }`}>
+                                            {u.isActive ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {u.reportCount || 0}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {new Date(u.createdAt).toLocaleDateString('en-IN')}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div className="flex justify-end space-x-2 sm:space-x-3">
+                                            <button
+                                                onClick={() => toggleStatusMutation.mutate({ id: u._id, isActive: !u.isActive })}
+                                                className={`p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded ${u.isActive ? 'text-orange-600 hover:text-orange-900 hover:bg-orange-50' : 'text-green-600 hover:text-green-900 hover:bg-green-50'}`}
+                                                title={u.isActive ? "Deactivate User" : "Activate User"}
+                                            >
+                                                {u.isActive ? <UserX size={18} /> : <UserCheck size={18} />}
+                                            </button>
+                                            <Link href={`/admin/users/${u._id}`} className="text-blue-600 hover:text-blue-900 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-blue-50" title="View Details">
+                                                View
+                                            </Link>
+                                            <button
+                                                onClick={() => deleteUserMutation.mutate(u._id)}
+                                                className="text-red-600 hover:text-red-900 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded hover:bg-red-50"
+                                                title="Delete User"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Pagination */}
@@ -166,17 +170,17 @@ export default function UsersPage() {
                     <button
                         onClick={() => setPage(p => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50"
+                        className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50 min-h-[44px]"
                     >
                         Previous
                     </button>
-                    <span className="px-4 py-2 text-gray-600">
+                    <span className="px-4 py-2 text-gray-600 flex items-center">
                         Page {page} of {pagination.pages}
                     </span>
                     <button
                         onClick={() => setPage(p => Math.min(pagination.pages, p + 1))}
                         disabled={page === pagination.pages}
-                        className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50"
+                        className="px-4 py-2 border border-gray-300 rounded-md disabled:opacity-50 min-h-[44px]"
                     >
                         Next
                     </button>
