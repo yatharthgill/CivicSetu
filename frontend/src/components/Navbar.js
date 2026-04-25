@@ -23,7 +23,7 @@ export default function Navbar() {
 
                     <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
                         <Link href="/reports" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-                            View Reports
+                            View Complaints
                         </Link>
                         {user ? (
                             <>
@@ -34,7 +34,7 @@ export default function Navbar() {
                                     My Status
                                 </Link>
                                 <Link href="/submit" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
-                                    Report Issue
+                                    Complaint
                                 </Link>
                                 {user.role === 'admin' && (
                                     <>
